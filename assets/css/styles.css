@@ -40,6 +40,13 @@ section {
   text-align: center;
 }
 
+#parkGrid {
+  background-color: var(--green-lt);
+  min-height: 100vh;
+  height: auto;
+  max-width: 100%;
+}
+
 .ui-widget {
   font-size: 2rem;
 }
