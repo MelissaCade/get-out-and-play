@@ -23,7 +23,6 @@ header {
   font-size: 6rem;
   text-align: center;
   padding: 2rem;
-  /* background-color: var(--green-xlt); */
   background-image: url("../images/background-cropped.jpg");
   background-repeat: no-repeat;
   background-size: 100%;
@@ -40,7 +39,7 @@ section {
   text-align: center;
 }
 
-#parkGrid {
+.card-grid {
   background-color: var(--green-lt);
   min-height: 100vh;
   height: auto;
@@ -75,4 +74,10 @@ section {
   max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  header {
+    background-image: url("../images/background-mobile.jpg");
+  }
 }
