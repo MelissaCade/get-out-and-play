@@ -9,158 +9,165 @@
 //"images.url" will give a lovely .jpg of the park
 
 //Code from jQueryUI to create a combobox to search through a dropdown menu
-$( function() {
-    $.widget( "custom.combobox", {
-      _create: function() {
-        this.wrapper = $( "<span>" )
-          .addClass( "custom-combobox" )
-          .insertAfter( this.element );
- 
-        this.element.hide();
-        this._createAutocomplete();
-        this._createShowAllButton();
-      },
- 
-      _createAutocomplete: function() {
-        var selected = this.element.children( ":selected" ),
-          value = selected.val() ? selected.text() : "";
- 
-        this.input = $( "<input>" )
-          .appendTo( this.wrapper )
-          .val( value )
-          .attr( "title", "" )
-          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
-          .autocomplete({
-            delay: 0,
-            minLength: 0,
-            source: this._source.bind( this )
-          })
-          .tooltip({
-            classes: {
-              "ui-tooltip": "ui-state-highlight"
-            }
-          });
- 
-        this._on( this.input, {
-          autocompleteselect: function( event, ui ) {
-            ui.item.option.selected = true;
-            this._trigger( "select", event, {
-              item: ui.item.option
-            });
+$(function () {
+  $.widget("custom.combobox", {
+    _create: function () {
+      this.wrapper = $("<span>")
+        .addClass("custom-combobox")
+        .insertAfter(this.element);
+
+      this.element.hide();
+      this._createAutocomplete();
+      this._createShowAllButton();
+    },
+
+    _createAutocomplete: function () {
+      var selected = this.element.children(":selected"),
+        value = selected.val() ? selected.text() : "";
+
+      this.input = $("<input>")
+        .appendTo(this.wrapper)
+        .val(value)
+        .attr("title", "")
+        .addClass(
+          "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left"
+        )
+        .autocomplete({
+          delay: 0,
+          minLength: 0,
+          source: this._source.bind(this),
+        })
+        .tooltip({
+          classes: {
+            "ui-tooltip": "ui-state-highlight",
           },
- 
-          autocompletechange: "_removeIfInvalid"
         });
-      },
- 
-      _createShowAllButton: function() {
-        var input = this.input,
-          wasOpen = false;
- 
-        $( "<a>" )
-          .attr( "tabIndex", -1 )
-          .tooltip()
-          .appendTo( this.wrapper )
-          .button({
-            icons: {
-              primary: "ui-icon-triangle-1-s"
-            },
-            text: false
-          })
-          .removeClass( "ui-corner-all" )
-          .addClass( "custom-combobox-toggle ui-corner-right" )
-          .on( "mousedown", function() {
-            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
-          })
-          .on( "click", function() {
-            input.trigger( "focus" );
- 
-            // Close if already visible
-            if ( wasOpen ) {
-              return;
-            }
- 
-            // Pass empty string as value to search for, displaying all results
-            input.autocomplete( "search", "" );
+
+      this._on(this.input, {
+        autocompleteselect: function (event, ui) {
+          ui.item.option.selected = true;
+          this._trigger("select", event, {
+            item: ui.item.option,
           });
-      },
- 
-      _source: function( request, response ) {
-        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-        response( this.element.children( "option" ).map(function() {
-          var text = $( this ).text();
-          if ( this.value && ( !request.term || matcher.test(text) ) )
+        },
+
+        autocompletechange: "_removeIfInvalid",
+      });
+    },
+
+    _createShowAllButton: function () {
+      var input = this.input,
+        wasOpen = false;
+
+      $("<a>")
+        .attr("tabIndex", -1)
+        .tooltip()
+        .appendTo(this.wrapper)
+        .button({
+          icons: {
+            primary: "ui-icon-triangle-1-s",
+          },
+          text: false,
+        })
+        .removeClass("ui-corner-all")
+        .addClass("custom-combobox-toggle ui-corner-right")
+        .on("mousedown", function () {
+          wasOpen = input.autocomplete("widget").is(":visible");
+        })
+        .on("click", function () {
+          input.trigger("focus");
+
+          // Close if already visible
+          if (wasOpen) {
+            return;
+          }
+
+          // Pass empty string as value to search for, displaying all results
+          input.autocomplete("search", "");
+        });
+    },
+
+    _source: function (request, response) {
+      var matcher = new RegExp(
+        $.ui.autocomplete.escapeRegex(request.term),
+        "i"
+      );
+      response(
+        this.element.children("option").map(function () {
+          var text = $(this).text();
+          if (this.value && (!request.term || matcher.test(text)))
             return {
               label: text,
               value: text,
-              option: this
+              option: this,
             };
-        }) );
-      },
- 
-      _removeIfInvalid: function( event, ui ) {
- 
-        // Selected an item, nothing to do
-        if ( ui.item ) {
-          return;
-        }
- 
-        // Search for a match (case-insensitive)
-        var value = this.input.val(),
-          valueLowerCase = value.toLowerCase(),
-          valid = false;
-        this.element.children( "option" ).each(function() {
-          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
-            this.selected = valid = true;
-            return false;
-          }
-        });
- 
-        // Found a match, nothing to do
-        if ( valid ) {
-          return;
-        }
- 
-        // Remove invalid value
-        this.input
-          .val( "" )
-          .attr( "title", value + " didn't match any item" )
-          .tooltip( "open" );
-        this.element.val( "" );
-        this._delay(function() {
-          this.input.tooltip( "close" ).attr( "title", "" );
-        }, 2500 );
-        this.input.autocomplete( "instance" ).term = "";
-      },
- 
-      _destroy: function() {
-        this.wrapper.remove();
-        this.element.show();
+        })
+      );
+    },
+
+    _removeIfInvalid: function (event, ui) {
+      // Selected an item, nothing to do
+      if (ui.item) {
+        return;
       }
-    });
- 
-    $( "#combobox" ).combobox();
-    $( "#toggle" ).on( "click", function() {
-      $( "#combobox" ).toggle();
-    });
+
+      // Search for a match (case-insensitive)
+      var value = this.input.val(),
+        valueLowerCase = value.toLowerCase(),
+        valid = false;
+      this.element.children("option").each(function () {
+        if ($(this).text().toLowerCase() === valueLowerCase) {
+          this.selected = valid = true;
+          return false;
+        }
+      });
+
+      // Found a match, nothing to do
+      if (valid) {
+        return;
+      }
+
+      // Remove invalid value
+      this.input
+        .val("")
+        .attr("title", value + " didn't match any item")
+        .tooltip("open");
+      this.element.val("");
+      this._delay(function () {
+        this.input.tooltip("close").attr("title", "");
+      }, 2500);
+      this.input.autocomplete("instance").term = "";
+    },
+
+    _destroy: function () {
+      this.wrapper.remove();
+      this.element.show();
+    },
+  });
+
+  $("#combobox").combobox();
+  $("#toggle").on("click", function () {
+    $("#combobox").toggle();
+  });
 });
-
-
 
 //Creates cards with park info and buttons
 function createParkCard() {
   //Create an array and fill with park info based on the state user chooses
 
   //Iterate through park info in array to create cards
-  for (i=0; i < placeholder.length; i++) {
-    const parkCell = $('<div>').addClass('col');
-    const parkCard = $('<div>').addClass('card h-100');
-    const cardImage = $('<img>').attr('src', '').addClass('card-img-top').attr('alt', '');
-    const cardBody = $('<div>').addClass('card-body');
-    const cardTitle = $('<h3>').addClass('card-title');
-    const cardText = $('<p>').addClass('card-text');
-    const cardLinkBtn = $('<a>').addClass('btn btn-primary');
-    const cardWeatherBtn = $('<a>').addClass('btn btn-primary');
+  for (i = 0; i < placeholder.length; i++) {
+    const parkCell = $("<div>").addClass("col");
+    const parkCard = $("<div>").addClass("card h-100");
+    const cardImage = $("<img>")
+      .attr("src", "")
+      .addClass("card-img-top")
+      .attr("alt", "");
+    const cardBody = $("<div>").addClass("card-body");
+    const cardTitle = $("<h3>").addClass("card-title");
+    const cardText = $("<p>").addClass("card-text");
+    const cardLinkBtn = $("<a>").addClass("btn btn-primary");
+    const cardWeatherBtn = $("<a>").addClass("btn btn-primary");
 
     //Image will be populated from ping to park API
 
@@ -168,39 +175,60 @@ function createParkCard() {
 
     //Event listeners for button press
 
-      //Park info button
+    //Park info button
 
-      //Weather button
+    //Weather button
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
     parkCell.append(parkCard);
-    parkCell.appendTo($('#parkGrid'));
-}};
+    parkCell.appendTo($("#parkGrid"));
+  }
+}
 
 function weatherModal() {
   //Create modal pop-up to house weather card group
-    const weatherModal = $('<div>').addClass('modal').attr('tabindex', '-1');
-    const modalDialog = $('<div>').addClass('modal-dialog');
-    const modalContent = $('<div>').addClass('modal-content');
-    const modalHeader = $('<div>').addClass('modal-header');
-    const modalTitle = $('<h4>').addClass('modal-title text-center').text('5-Day Forecast');
-    const modalClose = $('<button>').addClass('btn-close').attr('data-bs-dismiss', 'modal').attr('aria-label', 'Close');
-    const modalBody = $('<div>').addClass('modal-body');
+  const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
+  const modalDialog = $("<div>").addClass("modal-dialog");
+  const modalContent = $("<div>").addClass("modal-content");
+  const modalHeader = $("<div>").addClass("modal-header");
+  const modalTitle = $("<h4>")
+    .addClass("modal-title text-center")
+    .text("5-Day Forecast");
+  const modalClose = $("<button>")
+    .addClass("btn-close")
+    .attr("data-bs-dismiss", "modal")
+    .attr("aria-label", "Close");
+  const modalBody = $("<div>").addClass("modal-body");
+  const forecastGroup = $("<div>").addClass("card-group");
+  const forecastCard = $("<div>").addClass("card");
+  const forecastIcon = $("<img>").addClass("card-img-top").attr("src", " ");
+  const forecastBody = $("<div>").addClass("card-body");
+  const forecastDate = $("<h5>").addClass("card-title");
+  const forecastTemp = $("<p>").addClass("card-text");
+  const forecastWindspeed = $("<p>").addClass("card-text");
+  const forecastHumidity = $("<p>").addClass("card-text");
 
-    //Add an X button in the upper right corner to close the modal
 
+weatherModal.append(modalDialog)
+modalDialog.append(modalContent)
+modalContent.append(modalHeader,modalBody)
+modalHeader.append(modalTitle,modalClose)
+modalBody.append(forecastGroup)
+
+
+
+//Will have to change default (K) to Farenheit for temperature
   //Create card group for 5-day forecast
 
-    //Pull postal code/latitude and longitude from park API to ping weather API for forecast
+  //Pull postal code/latitude and longitude from park API to ping weather API for forecast
 
   //Assign image based on weather conditions pulled from API
 
-    //if statement most likely needed for weather condition
+  //if statement most likely needed for weather condition
 
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
 
   //Append modal to HTML
-};
-
+}
