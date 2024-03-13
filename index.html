@@ -5,26 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Group Project 1</title>
     <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
     <link rel="stylesheet" href="./assets/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Angkor&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <header></header>
+    <header>
+      <h1>Get Out and Play!</h1>
+    </header>
     <main>
-
-
-
-
-
-
-
-
-
-
-
-
-      
+      <aside>
+        <div class="ui-widget">
+          <label>Please choose your state</label>
+          <select id="combobox">
+            <!-- Options will be the states, might be a way to iterate this out instead of typing out all the states -->
+            <option value>Select state...</option>
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+          </select>
+        </div>
+      </aside>
     </main>
     <footer></footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <!-- Adding link to dayjs in order to pull current date to get weather forecast -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+      integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U="
+      crossorigin="anonymous"
+    ></script>
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
