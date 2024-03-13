@@ -34,25 +34,24 @@ section {
   padding: 2rem;
   max-width: 100%;
   height: auto;
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 
 .ui-widget {
   font-size: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+}
+.ui-widget label {
+  line-height: 2;
 }
 .custom-combobox {
   position: relative;
-  display: inline-block;
+  display: block;
 }
 .custom-combobox-toggle {
   position: absolute;
   top: 0;
   bottom: 0;
-  margin-right: 5rem;
+  margin-left: 0.5rem;
   padding: 0;
 }
 .custom-combobox-input {
