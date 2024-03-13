@@ -145,6 +145,8 @@ $( function() {
     });
 });
 
+
+
 //Creates cards with park info and buttons
 function createParkCard() {
   //Create an array and fill with park info based on the state user chooses
@@ -160,9 +162,15 @@ function createParkCard() {
     const cardLinkBtn = $('<a>').addClass('btn btn-primary');
     const cardWeatherBtn = $('<a>').addClass('btn btn-primary');
 
+    //Image will be populated from ping to park API
+
     //Update the text within the cards from API ping
 
     //Event listeners for button press
+
+      //Park info button
+
+      //Weather button
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
@@ -172,5 +180,23 @@ function createParkCard() {
 }};
 
 function weatherModal() {
+  //Create modal pop-up to house weather card group
+    const weatherModal = ;
+    const modalDialog = ;
+    
 
+    //Add an X button in the upper right corner to close the modal
+
+  //Create card group for 5-day forecast
+
+    //Pull postal code/latitude and longitude from park API to ping weather API for forecast
+
+  //Assign image based on weather conditions pulled from API
+
+    //if statement most likely needed for weather condition
+
+  //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
+
+  //Append modal to HTML
 };
+
