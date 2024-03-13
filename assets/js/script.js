@@ -181,9 +181,13 @@ function createParkCard() {
 
 function weatherModal() {
   //Create modal pop-up to house weather card group
-    const weatherModal = ;
-    const modalDialog = ;
-    
+    const weatherModal = $('<div>').addClass('modal').attr('tabindex', '-1');
+    const modalDialog = $('<div>').addClass('modal-dialog');
+    const modalContent = $('<div>').addClass('modal-content');
+    const modalHeader = $('<div>').addClass('modal-header');
+    const modalTitle = $('<h4>').addClass('modal-title text-center').text('5-Day Forecast');
+    const modalClose = $('<button>').addClass('btn-close').attr('data-bs-dismiss', 'modal').attr('aria-label', 'Close');
+    const modalBody = $('<div>').addClass('modal-body');
 
     //Add an X button in the upper right corner to close the modal
 
