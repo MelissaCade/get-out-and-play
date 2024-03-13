@@ -1,3 +1,32 @@
+:root {
+  --blue-dk: rgb(2, 48, 63);
+  --blue-md: rgb(28, 90, 115);
+  --blue-lt: rgb(74, 116, 140);
+  --blue-xlt: rgb(243, 241, 255);
+  --green-dk: rgb(8, 41, 34);
+  --green-md: rgb(34, 75, 57);
+  --green-lt: rgb(112, 133, 100);
+  --green-xlt: rgb(250, 253, 248);
+}
+html {
+  font-size: 62.5%;
+}
+.angkor-regular {
+  font-family: "Angkor", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+header {
+  font-family: "Angkor", serif;
+  font-weight: 400;
+  font-size: 6rem;
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--green-xlt);
+  color: var(--green-dk);
+}
+
 .custom-combobox {
   position: relative;
   display: inline-block;
