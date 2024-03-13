@@ -25,17 +25,33 @@ header {
   padding: 2rem;
   background-color: var(--green-xlt);
   color: var(--green-dk);
+  max-width: 100%;
 }
 
+section {
+  background-color: var(--green-xlt);
+  color: var(--green-dk);
+  padding: 2rem;
+  max-width: 100%;
+  height: auto;
+  text-align: center;
+}
+
+.ui-widget {
+  font-size: 2rem;
+}
+.ui-widget label {
+  line-height: 2;
+}
 .custom-combobox {
   position: relative;
-  display: inline-block;
+  display: block;
 }
 .custom-combobox-toggle {
   position: absolute;
   top: 0;
   bottom: 0;
-  margin-left: -1px;
+  margin-left: 0.5rem;
   padding: 0;
 }
 .custom-combobox-input {
