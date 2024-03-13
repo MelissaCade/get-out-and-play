@@ -59,7 +59,6 @@ $( function() {
  
         $( "<a>" )
           .attr( "tabIndex", -1 )
-          .attr( "title", "Show All Items" )
           .tooltip()
           .appendTo( this.wrapper )
           .button({
@@ -144,4 +143,34 @@ $( function() {
     $( "#toggle" ).on( "click", function() {
       $( "#combobox" ).toggle();
     });
-  } );
+});
+
+//Creates cards with park info and buttons
+function createParkCard() {
+  //Create an array and fill with park info based on the state user chooses
+
+  //Iterate through park info in array to create cards
+  for (i=0; i < placeholder.length; i++) {
+    const parkCell = $('<div>').addClass('col');
+    const parkCard = $('<div>').addClass('card h-100');
+    const cardImage = $('<img>').attr('src', '').addClass('card-img-top').attr('alt', '');
+    const cardBody = $('<div>').addClass('card-body');
+    const cardTitle = $('<h3>').addClass('card-title');
+    const cardText = $('<p>').addClass('card-text');
+    const cardLinkBtn = $('<a>').addClass('btn btn-primary');
+    const cardWeatherBtn = $('<a>').addClass('btn btn-primary');
+
+    //Update the text within the cards from API ping
+
+    //Event listeners for button press
+
+    //Append the cards to the body
+    cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
+    parkCard.append(cardImage, cardBody);
+    parkCell.append(parkCard);
+    parkCell.appendTo($('#parkGrid'));
+}};
+
+function weatherModal() {
+
+};
