@@ -8,7 +8,6 @@
 //alternately, "addresses.postalCode" can be used to get a five-digit postal code
 //"images.url" will give a lovely .jpg of the park
 
-
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
   $.widget("custom.combobox", {
@@ -154,75 +153,77 @@ $(function () {
 
 //Function to get data for national parks
 function getParks(state) {
-  fetch(`https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`)
-    .then(response => {
+  fetch(
+    `https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`
+  )
+    .then((response) => {
       if (!response.ok) {
-        throw new Error ("Network response unsuccessful");
+        throw new Error("Network response unsuccessful");
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       console.log(data);
       let parkInfoRaw = JSON.stringify(data);
-      localStorage.setItem('parkData', parkInfoRaw);
-  
-      let parkInfoString = localStorage.getItem('parkData');
+      localStorage.setItem("parkData", parkInfoRaw);
+
+      let parkInfoString = localStorage.getItem("parkData");
       let parkInfo = JSON.parse(parkInfoString);
       return parkInfo;
     })
-    .catch(error => {
-      console.error('Error fetching data:', error);
+    .catch((error) => {
+      console.error("Error fetching data:", error);
     });
-
 }
 
 //Function to get data for weather
 function getWeather(latitude, longitude) {
   fetch(``)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
-        throw new Error ("Network response unsuccessful");
+        throw new Error("Network response unsuccessful");
       }
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       console.log(data);
       let weatherInfoRaw = JSON.stringify(data);
-      localStorage.setItem('weatherData', weatherInfoRaw);
-  
-      let weatherInfoString = localStorage.getItem('weatherData');
+      localStorage.setItem("weatherData", weatherInfoRaw);
+
+      let weatherInfoString = localStorage.getItem("weatherData");
       let weatherInfo = JSON.parse(weatherInfoString);
       return weatherInfo;
     })
-    .catch(error => {
-      console.error('Error fetching data:', error);
+    .catch((error) => {
+      console.error("Error fetching data:", error);
     });
-
 }
 
 //Creates cards with park info and buttons
 function createParkCard() {
   //Variable Declaration for state input
-  let stateCode = $("combobox").val();
+  let stateCode = $("#combobox").val();
 
   //Call function to get API data
   let parkInfo = getParks(stateCode);
+  console.log(parkInfo);
 
   //Iterate through park info in array to create cards
   for (i = 0; i < parkInfo.length; i++) {
     const parkCell = $("<div>").addClass("col");
     const parkCard = $("<div>").addClass("card h-100");
-    const cardImage = $("<img>")
-      .addClass("card-img-top");
+    const cardImage = $("<img>").addClass("card-img-top");
     const cardBody = $("<div>").addClass("card-body");
     const cardTitle = $("<h3>").addClass("card-title");
     const cardText = $("<p>").addClass("card-text");
     const cardLinkBtn = $("<a>").addClass("btn btn-success").text("Learn More");
-    const cardWeatherBtn = $("<a>").addClass("btn btn-success").text("Forecast");
+    const cardWeatherBtn = $("<a>")
+      .addClass("btn btn-success")
+      .text("Forecast");
 
     //Image will be populated from ping to park API
     let parkImage = parkInfo.data.images.url;
-    cardImage.attr('src', `${parkImage}`)
+    cardImage.attr("src", `${parkImage}`);
 
     //Update the title with the name of the park pulled from the API
     let parkName = parkInfo.data.fullName;
@@ -231,33 +232,33 @@ function createParkCard() {
     //Update the text with a short description of the park that cuts off if it's too long
     let description = parkInfo.data.description;
     let maxLength = 40;
-    
+
     if (description.length > maxLength) {
       description = description.substring(0, maxLength) + "...";
-    };
-    
+    }
+
     cardText.text(description);
 
     //Event listeners for button press
+    button.addEventListener("click", cardLinkBtn);
+    button.addEventListener("click", cardWeatherBtn);
 
     //Park info button
     let parkSite = parkInfo.data.url;
 
-
-    cardLinkBtn.attr('href', `${parkSite}`)
+    cardLinkBtn.attr("href", `${parkSite}`);
 
     //Weather button
     let latitude = parkinfo.data.latitude;
     let longitude = parkinfo.data.longitude;
     //Call weatherModal function and pass latitude and longitude values into function for forecast ping
-    weatherModal(latitude, longitude)
+    weatherModal(latitude, longitude);
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
     parkCell.append(parkCard);
     parkCell.appendTo($("#parkGrid"));
-
   }
 }
 
@@ -287,26 +288,26 @@ function weatherModal(latitude, longitude) {
   const forecastTemp = $("<p>").addClass("card-text");
   const forecastWind = $("<p>").addClass("card-text");
   const forecastHumid = $("<p>").addClass("card-text");
-  
+
   //Pull postal code/latitude and longitude from park API to ping weather API for forecast
-  
+
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
-  
+
   //Will have to change default (K) to Farenheit for temperature
-  
+
   //if statement most likely needed for weather condition
-  
+
   //Assign image based on weather conditions pulled from API
 
   //Append modal to HTML
-  weatherModal.append(modalDialog)
-  modalDialog.append(modalContent)
-  modalContent.append(modalHeader,modalBody)
-  modalHeader.append(modalTitle,modalClose)
-  modalBody.append(forecastGroup)
+  weatherModal.append(modalDialog);
+  modalDialog.append(modalContent);
+  modalContent.append(modalHeader, modalBody);
+  modalHeader.append(modalTitle, modalClose);
+  modalBody.append(forecastGroup);
 }
 
 //Create initialization function when page fully loads
-$(document).ready(function() {
-
+$(document).ready(function () {
+  $(".selectButton").on("click", createParkCard);
 });
