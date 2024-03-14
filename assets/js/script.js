@@ -154,7 +154,6 @@ $(function () {
 
 //Function to get data for national parks
 function getParks(state) {
-  //
   fetch(`https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`)
     .then(response => {
       if (!response.ok) {
@@ -170,6 +169,30 @@ function getParks(state) {
       let parkInfoString = localStorage.getItem('parkData');
       let parkInfo = JSON.parse(parkInfoString);
       return parkInfo;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+
+}
+
+//Function to get data for weather
+function getWeather(latitude, longitude) {
+  fetch(``)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error ("Network response unsuccessful");
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      let weatherInfoRaw = JSON.stringify(data);
+      localStorage.setItem('weatherData', weatherInfoRaw);
+  
+      let weatherInfoString = localStorage.getItem('weatherData');
+      let weatherInfo = JSON.parse(weatherInfoString);
+      return weatherInfo;
     })
     .catch(error => {
       console.error('Error fetching data:', error);
@@ -194,8 +217,8 @@ function createParkCard() {
     const cardBody = $("<div>").addClass("card-body");
     const cardTitle = $("<h3>").addClass("card-title");
     const cardText = $("<p>").addClass("card-text");
-    const cardLinkBtn = $("<a>").addClass("btn btn-primary").text("Learn More");
-    const cardWeatherBtn = $("<a>").addClass("btn btn-primary").text("Forecast");
+    const cardLinkBtn = $("<a>").addClass("btn btn-success").text("Learn More");
+    const cardWeatherBtn = $("<a>").addClass("btn btn-success").text("Forecast");
 
     //Image will be populated from ping to park API
     let parkImage = parkInfo.data.images.url;
@@ -219,11 +242,14 @@ function createParkCard() {
 
     //Park info button
     let parkSite = parkInfo.data.url;
+
+
     cardLinkBtn.attr('href', `${parkSite}`)
 
     //Weather button
     let latitude = parkinfo.data.latitude;
     let longitude = parkinfo.data.longitude;
+    //Call weatherModal function and pass latitude and longitude values into function for forecast ping
     weatherModal(latitude, longitude)
 
     //Append the cards to the body
@@ -232,11 +258,13 @@ function createParkCard() {
     parkCell.append(parkCard);
     parkCell.appendTo($("#parkGrid"));
 
-    //Call weatherModal function and pass latitude and longitude values into function for forecast ping
   }
 }
 
 function weatherModal(latitude, longitude) {
+  //Call weather API function to pull weather
+  let weatherInfo = getWeather(latitude, longitude);
+
   //Create modal pop-up to house weather card group
   const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
   const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
@@ -257,8 +285,8 @@ function weatherModal(latitude, longitude) {
   const forecastBody = $("<div>").addClass("card-body");
   const forecastDate = $("<h5>").addClass("card-title");
   const forecastTemp = $("<p>").addClass("card-text");
-  const forecastWindspeed = $("<p>").addClass("card-text");
-  const forecastHumidity = $("<p>").addClass("card-text");
+  const forecastWind = $("<p>").addClass("card-text");
+  const forecastHumid = $("<p>").addClass("card-text");
   
   //Pull postal code/latitude and longitude from park API to ping weather API for forecast
   
