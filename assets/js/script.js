@@ -152,10 +152,12 @@ $(function () {
 });
 
 //Function to get data for national parks
-function getParks(state) {
+function getParks() {
+  let state = $("#combobox").val();
+  
   fetch(
     `https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`
-  )
+    )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response unsuccessful");
@@ -163,13 +165,18 @@ function getParks(state) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       let parkInfoRaw = JSON.stringify(data);
       localStorage.setItem("parkData", parkInfoRaw);
 
+      $('.parkResults').remove();
+
       let parkInfoString = localStorage.getItem("parkData");
       let parkInfo = JSON.parse(parkInfoString);
-      return parkInfo;
+      const parkInformation = parkInfo.data
+      console.log(parkInfo.data);
+      createParkCard(parkInformation)
+      // return parkInformation;
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -200,17 +207,11 @@ function getWeather(latitude, longitude) {
 }
 
 //Creates cards with park info and buttons
-function createParkCard() {
-  //Variable Declaration for state input
-  let stateCode = $("#combobox").val();
-
-  //Call function to get API data
-  let parkInfo = getParks(stateCode);
-  console.log(parkInfo);
+function createParkCard(parkInfo) {
 
   //Iterate through park info in array to create cards
   for (i = 0; i < parkInfo.length; i++) {
-    const parkCell = $("<div>").addClass("col");
+    const parkCell = $("<div>").addClass("col parkResults");
     const parkCard = $("<div>").addClass("card h-100");
     const cardImage = $("<img>").addClass("card-img-top");
     const cardBody = $("<div>").addClass("card-body");
@@ -222,15 +223,15 @@ function createParkCard() {
       .text("Forecast");
 
     //Image will be populated from ping to park API
-    let parkImage = parkInfo.data.images.url;
+    let parkImage = parkInfo[i].images[0].url;
     cardImage.attr("src", `${parkImage}`);
 
     //Update the title with the name of the park pulled from the API
-    let parkName = parkInfo.data.fullName;
+    let parkName = parkInfo[i].fullName;
     cardTitle.text(`${parkName}`);
 
     //Update the text with a short description of the park that cuts off if it's too long
-    let description = parkInfo.data.description;
+    let description = parkInfo[i].description;
     let maxLength = 40;
 
     if (description.length > maxLength) {
@@ -240,19 +241,19 @@ function createParkCard() {
     cardText.text(description);
 
     //Event listeners for button press
-    button.addEventListener("click", cardLinkBtn);
-    button.addEventListener("click", cardWeatherBtn);
+    cardLinkBtn.on("click", );
+    cardWeatherBtn.on("click", );
 
     //Park info button
-    let parkSite = parkInfo.data.url;
+    let parkSite = parkInfo.url;
 
     cardLinkBtn.attr("href", `${parkSite}`);
 
     //Weather button
-    let latitude = parkinfo.data.latitude;
-    let longitude = parkinfo.data.longitude;
+    let latitude = parkInfo.latitude;
+    let longitude = parkInfo.longitude;
     //Call weatherModal function and pass latitude and longitude values into function for forecast ping
-    weatherModal(latitude, longitude);
+    // weatherModal(latitude, longitude);
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
@@ -309,5 +310,5 @@ function weatherModal(latitude, longitude) {
 
 //Create initialization function when page fully loads
 $(document).ready(function () {
-  $(".selectButton").on("click", createParkCard);
+  $(".selectButton").on("click", getParks);
 });
