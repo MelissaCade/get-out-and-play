@@ -8,6 +8,9 @@
 //alternately, "addresses.postalCode" can be used to get a five-digit postal code
 //"images.url" will give a lovely .jpg of the park
 
+//Variable Declaration for state input
+let stateCode = $("combobox").val();
+
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
   $.widget("custom.combobox", {
@@ -151,31 +154,68 @@ $(function () {
   });
 });
 
+//Function to get data for national parks
+function getParks(state) {
+  //
+  fetch(`https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error ("Network response unsuccessful");
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      let parkInfoRaw = JSON.stringify(data);
+      localStorage.setItem('parkData', parkInfoRaw);
+  
+      let parkInfoString = localStorage.getItem('parkData');
+      let parkInfo = JSON.parse(parkInfoString);
+      return parkInfo;
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+
+}
+
 //Creates cards with park info and buttons
 function createParkCard() {
-  //Create an array and fill with park info based on the state user chooses
+  //Call function to get API data
+  getParks(stateCode);
 
+  //Create an array and fill with park info based on the state user chooses
+  
   //Iterate through park info in array to create cards
   for (i = 0; i < placeholder.length; i++) {
     const parkCell = $("<div>").addClass("col");
     const parkCard = $("<div>").addClass("card h-100");
     const cardImage = $("<img>")
-      .attr("src", "")
-      .addClass("card-img-top")
-      .attr("alt", "");
+      .addClass("card-img-top");
     const cardBody = $("<div>").addClass("card-body");
     const cardTitle = $("<h3>").addClass("card-title");
     const cardText = $("<p>").addClass("card-text");
-    const cardLinkBtn = $("<a>").addClass("btn btn-primary");
-    const cardWeatherBtn = $("<a>").addClass("btn btn-primary");
+    const cardLinkBtn = $("<a>").addClass("btn btn-primary").text("Learn More");
+    const cardWeatherBtn = $("<a>").addClass("btn btn-primary").text("Forecast");
 
     //Image will be populated from ping to park API
 
-    //Update the text within the cards from API ping
+    //Update the title with the name of the park pulled from the API
+
+    //Update the text with a short description of the park that cuts off if it's too long
+    let description = data.description;
+    let maxLength = 40;
+    
+    if (description.length > maxLength) {
+      description = description.substring(0, maxLength) + "...";
+    };
+    
+    cardText.text(description);
 
     //Event listeners for button press
 
     //Park info button
+    cardLinkBtn.attr('href', 'd')
 
     //Weather button
 
@@ -184,13 +224,15 @@ function createParkCard() {
     parkCard.append(cardImage, cardBody);
     parkCell.append(parkCard);
     parkCell.appendTo($("#parkGrid"));
+
+    //Call weatherModal function and pass latitude and longitude values into function for forecast ping
   }
 }
 
 function weatherModal() {
   //Create modal pop-up to house weather card group
   const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
-  const modalDialog = $("<div>").addClass("modal-dialog");
+  const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
   const modalContent = $("<div>").addClass("modal-content");
   const modalHeader = $("<div>").addClass("modal-header");
   const modalTitle = $("<h4>")
@@ -201,34 +243,30 @@ function weatherModal() {
     .attr("data-bs-dismiss", "modal")
     .attr("aria-label", "Close");
   const modalBody = $("<div>").addClass("modal-body");
+  //Create card group for 5-day forecast
   const forecastGroup = $("<div>").addClass("card-group");
   const forecastCard = $("<div>").addClass("card");
-  const forecastIcon = $("<img>").addClass("card-img-top").attr("src", " ");
+  const forecastIcon = $("<img>").addClass("card-img-top");
   const forecastBody = $("<div>").addClass("card-body");
   const forecastDate = $("<h5>").addClass("card-title");
   const forecastTemp = $("<p>").addClass("card-text");
   const forecastWindspeed = $("<p>").addClass("card-text");
   const forecastHumidity = $("<p>").addClass("card-text");
-
-
-weatherModal.append(modalDialog)
-modalDialog.append(modalContent)
-modalContent.append(modalHeader,modalBody)
-modalHeader.append(modalTitle,modalClose)
-modalBody.append(forecastGroup)
-
-
-
-//Will have to change default (K) to Farenheit for temperature
-  //Create card group for 5-day forecast
-
+  
   //Pull postal code/latitude and longitude from park API to ping weather API for forecast
-
+  
+  //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
+  
+  //Will have to change default (K) to Farenheit for temperature
+  
+  //if statement most likely needed for weather condition
+  
   //Assign image based on weather conditions pulled from API
 
-  //if statement most likely needed for weather condition
-
-  //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
-
   //Append modal to HTML
+  weatherModal.append(modalDialog)
+  modalDialog.append(modalContent)
+  modalContent.append(modalHeader,modalBody)
+  modalHeader.append(modalTitle,modalClose)
+  modalBody.append(forecastGroup)
 }
