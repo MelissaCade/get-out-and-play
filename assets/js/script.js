@@ -8,8 +8,6 @@
 //alternately, "addresses.postalCode" can be used to get a five-digit postal code
 //"images.url" will give a lovely .jpg of the park
 
-//Variable Declaration for state input
-let stateCode = $("combobox").val();
 
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
@@ -181,13 +179,14 @@ function getParks(state) {
 
 //Creates cards with park info and buttons
 function createParkCard() {
-  //Call function to get API data
-  getParks(stateCode);
+  //Variable Declaration for state input
+  let stateCode = $("combobox").val();
 
-  //Create an array and fill with park info based on the state user chooses
-  
+  //Call function to get API data
+  let parkInfo = getParks(stateCode);
+
   //Iterate through park info in array to create cards
-  for (i = 0; i < placeholder.length; i++) {
+  for (i = 0; i < parkInfo.length; i++) {
     const parkCell = $("<div>").addClass("col");
     const parkCard = $("<div>").addClass("card h-100");
     const cardImage = $("<img>")
@@ -199,11 +198,15 @@ function createParkCard() {
     const cardWeatherBtn = $("<a>").addClass("btn btn-primary").text("Forecast");
 
     //Image will be populated from ping to park API
+    let parkImage = parkInfo.data.images.url;
+    cardImage.attr('src', `${parkImage}`)
 
     //Update the title with the name of the park pulled from the API
+    let parkName = parkInfo.data.fullName;
+    cardTitle.text(`${parkName}`);
 
     //Update the text with a short description of the park that cuts off if it's too long
-    let description = data.description;
+    let description = parkInfo.data.description;
     let maxLength = 40;
     
     if (description.length > maxLength) {
@@ -215,9 +218,13 @@ function createParkCard() {
     //Event listeners for button press
 
     //Park info button
-    cardLinkBtn.attr('href', 'd')
+    let parkSite = parkInfo.data.url;
+    cardLinkBtn.attr('href', `${parkSite}`)
 
     //Weather button
+    let latitude = parkinfo.data.latitude;
+    let longitude = parkinfo.data.longitude;
+    weatherModal(latitude, longitude)
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
@@ -229,7 +236,7 @@ function createParkCard() {
   }
 }
 
-function weatherModal() {
+function weatherModal(latitude, longitude) {
   //Create modal pop-up to house weather card group
   const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
   const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
@@ -270,3 +277,8 @@ function weatherModal() {
   modalHeader.append(modalTitle,modalClose)
   modalBody.append(forecastGroup)
 }
+
+//Create initialization function when page fully loads
+$(document).ready(function() {
+
+});
