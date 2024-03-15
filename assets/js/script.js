@@ -8,6 +8,8 @@
 //alternately, "addresses.postalCode" can be used to get a five-digit postal code
 //"images.url" will give a lovely .jpg of the park
 
+let parkList = JSON.parse(localStorage.getItem("parkData"));
+
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
   $.widget("custom.combobox", {
@@ -165,7 +167,6 @@ function getParks() {
       return response.json();
     })
     .then((data) => {
-      // console.log(data);
       let parkInfoRaw = JSON.stringify(data);
       localStorage.setItem("parkData", parkInfoRaw);
 
@@ -174,9 +175,7 @@ function getParks() {
       let parkInfoString = localStorage.getItem("parkData");
       let parkInfo = JSON.parse(parkInfoString);
       const parkInformation = parkInfo.data;
-      console.log(parkInfo.data);
       createParkCard(parkInformation);
-      // return parkInformation;
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -185,7 +184,9 @@ function getParks() {
 
 //Function to get data for weather
 function getWeather(latitude, longitude) {
-  fetch(``)
+  fetch(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=d678cef631da82abd3dcab59ca6a3917`
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response unsuccessful");
@@ -199,7 +200,8 @@ function getWeather(latitude, longitude) {
 
       let weatherInfoString = localStorage.getItem("weatherData");
       let weatherInfo = JSON.parse(weatherInfoString);
-      return weatherInfo;
+      let weatherInformation = weatherInfo.list;
+      // weatherModal(weatherInformation);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -240,19 +242,17 @@ function createParkCard(parkInfo) {
 
     cardText.text(description);
 
-    //Event listener for weather button press
-    cardWeatherBtn.on("click");
-
     //Park info button
     let parkSite = parkInfo[i].url;
 
     cardLinkBtn.attr("href", `${parkSite}`);
 
-    //Weather button
+    //Pull park's latitude and longitude
     let latitude = parkInfo[i].latitude;
     let longitude = parkInfo[i].longitude;
-    //Call weatherModal function and pass latitude and longitude values into function for forecast ping
-    // weatherModal(latitude, longitude);
+
+    //Event listener for weather button press to call getWeather function and pass latitude and longitude
+    cardWeatherBtn.on("click", getWeather(latitude, longitude));
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
@@ -262,10 +262,19 @@ function createParkCard(parkInfo) {
   }
 }
 
-function weatherModal(latitude, longitude) {
-  //Call weather API function to pull weather
-  let weatherInfo = getWeather(latitude, longitude);
+//Function that will render park cards again when returning to site after visiting park site
+function renderParks() {
+  //Assigns empty array to parkList if state input is blank so page will not render all parks across the country upon page load
+  if (!parkList) {
+    parkList = [];
+  } else if ($("#combobox").val() === "") {
+    parkList = [];
+  } else {
+    getParks();
+  }
+}
 
+function renderModal() {
   //Create modal pop-up to house weather card group
   const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
   const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
@@ -279,6 +288,17 @@ function weatherModal(latitude, longitude) {
     .attr("data-bs-dismiss", "modal")
     .attr("aria-label", "Close");
   const modalBody = $("<div>").addClass("modal-body");
+
+  //Append modal to HTML
+  weatherModal.appendTo($(".card-grid"));
+  weatherModal.append(modalDialog);
+  modalDialog.append(modalContent);
+  modalContent.append(modalHeader, modalBody);
+  modalHeader.append(modalTitle, modalClose);
+  // modalBody.append(forecastGroup);
+}
+
+function weatherModal(weatherInfo) {
   //Create card group for 5-day forecast
   const forecastGroup = $("<div>").addClass("card-group");
   const forecastCard = $("<div>").addClass("card");
@@ -289,8 +309,6 @@ function weatherModal(latitude, longitude) {
   const forecastWind = $("<p>").addClass("card-text");
   const forecastHumid = $("<p>").addClass("card-text");
 
-  //Pull postal code/latitude and longitude from park API to ping weather API for forecast
-
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
 
   //Will have to change default (K) to Farenheit for temperature
@@ -298,16 +316,12 @@ function weatherModal(latitude, longitude) {
   //if statement most likely needed for weather condition
 
   //Assign image based on weather conditions pulled from API
-
-  //Append modal to HTML
-  weatherModal.append(modalDialog);
-  modalDialog.append(modalContent);
-  modalContent.append(modalHeader, modalBody);
-  modalHeader.append(modalTitle, modalClose);
-  modalBody.append(forecastGroup);
 }
 
 //Create initialization function when page fully loads
 $(document).ready(function () {
+  renderParks();
+  renderModal();
+
   $(".selectButton").on("click", getParks);
 });
