@@ -45,30 +45,6 @@ section {
   height: auto;
   max-width: 100%;
 }
-.card {
-  background-color: var(--green-xlt);
-  max-width: 20%;
-  padding: 1rem 1rem 2rem 1rem;
-  margin: 2rem;
-  border: 0.5rem var(--green-dk) solid;
-}
-.card-img-top {
-  max-width: 100%;
-}
-.card-title {
-  font-size: 2rem;
-  margin: 0.5rem 0 0 0;
-}
-.card-text {
-  font-size: 1.5rem;
-  margin: 1rem;
-}
-.btn-success {
-  font-size: 2rem;
-  padding: 0.5rem;
-  text-decoration: none;
-  color: var(--green-dk);
-}
 .ui-widget {
   font-size: 1rem;
 }
