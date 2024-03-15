@@ -210,8 +210,8 @@ function getWeather(latitude, longitude) {
 function createParkCard(parkInfo) {
   //Iterate through park info in array to create cards
   for (i = 0; i < parkInfo.length; i++) {
-    const parkCell = $("<div>").addClass("col parkResults");
-    const parkCard = $("<div>").addClass("card h-100");
+    const parkCell = $("<div>").addClass("parkResults col-3");
+    const parkCard = $("<div>").addClass("card col-3");
     const cardImage = $("<img>").addClass("card-img-top");
     const cardBody = $("<div>").addClass("card-body");
     const cardTitle = $("<h3>").addClass("card-title");
@@ -232,6 +232,7 @@ function createParkCard(parkInfo) {
 
     //Update the text with a short description of the park that cuts off if it's too long
     let description = parkInfo[i].description;
+
     let maxLength = 200;
 
     if (description.length > maxLength) {
