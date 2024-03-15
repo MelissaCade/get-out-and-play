@@ -10,149 +10,6 @@
 
 let parkList = JSON.parse(localStorage.getItem("parkData"));
 
-//Code from jQueryUI to create a combobox to search through a dropdown menu
-$(function () {
-  $.widget("custom.combobox", {
-    _create: function () {
-      this.wrapper = $("<span>")
-        .addClass("custom-combobox")
-        .insertAfter(this.element);
-
-      this.element.hide();
-      this._createAutocomplete();
-      this._createShowAllButton();
-    },
-
-    _createAutocomplete: function () {
-      var selected = this.element.children(":selected"),
-        value = selected.val() ? selected.text() : "";
-
-      this.input = $("<input>")
-        .appendTo(this.wrapper)
-        .val(value)
-        .attr("title", "")
-        .addClass(
-          "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left"
-        )
-        .autocomplete({
-          delay: 0,
-          minLength: 0,
-          source: this._source.bind(this),
-        })
-        .tooltip({
-          classes: {
-            "ui-tooltip": "ui-state-highlight",
-          },
-        });
-
-      this._on(this.input, {
-        autocompleteselect: function (event, ui) {
-          ui.item.option.selected = true;
-          this._trigger("select", event, {
-            item: ui.item.option,
-          });
-        },
-
-        autocompletechange: "_removeIfInvalid",
-      });
-    },
-
-    _createShowAllButton: function () {
-      var input = this.input,
-        wasOpen = false;
-
-      $("<a>")
-        .attr("tabIndex", -1)
-        .tooltip()
-        .appendTo(this.wrapper)
-        .button({
-          icons: {
-            primary: "ui-icon-triangle-1-s",
-          },
-          text: false,
-        })
-        .removeClass("ui-corner-all")
-        .addClass("custom-combobox-toggle ui-corner-right")
-        .on("mousedown", function () {
-          wasOpen = input.autocomplete("widget").is(":visible");
-        })
-        .on("click", function () {
-          input.trigger("focus");
-
-          // Close if already visible
-          if (wasOpen) {
-            return;
-          }
-
-          // Pass empty string as value to search for, displaying all results
-          input.autocomplete("search", "");
-        });
-    },
-
-    _source: function (request, response) {
-      var matcher = new RegExp(
-        $.ui.autocomplete.escapeRegex(request.term),
-        "i"
-      );
-      response(
-        this.element.children("option").map(function () {
-          var text = $(this).text();
-          if (this.value && (!request.term || matcher.test(text)))
-            return {
-              label: text,
-              value: text,
-              option: this,
-            };
-        })
-      );
-    },
-
-    _removeIfInvalid: function (event, ui) {
-      // Selected an item, nothing to do
-      if (ui.item) {
-        return;
-      }
-
-      // Search for a match (case-insensitive)
-      var value = this.input.val(),
-        valueLowerCase = value.toLowerCase(),
-        valid = false;
-      this.element.children("option").each(function () {
-        if ($(this).text().toLowerCase() === valueLowerCase) {
-          this.selected = valid = true;
-          return false;
-        }
-      });
-
-      // Found a match, nothing to do
-      if (valid) {
-        return;
-      }
-
-      // Remove invalid value
-      this.input
-        .val("")
-        .attr("title", value + " didn't match any item")
-        .tooltip("open");
-      this.element.val("");
-      this._delay(function () {
-        this.input.tooltip("close").attr("title", "");
-      }, 2500);
-      this.input.autocomplete("instance").term = "";
-    },
-
-    _destroy: function () {
-      this.wrapper.remove();
-      this.element.show();
-    },
-  });
-
-  $("#combobox").combobox();
-  $("#toggle").on("click", function () {
-    $("#combobox").toggle();
-  });
-});
-
 //Function to get data for national parks
 function getParks() {
   let state = $("#combobox").val();
@@ -219,8 +76,11 @@ function createParkCard(parkInfo) {
     const cardTitle = $("<h3>").addClass("card-title");
     const cardText = $("<p>").addClass("card-text");
     const cardLinkBtn = $("<a>").addClass("btn btn-success").text("Learn More");
-    const cardWeatherBtn = $("<a>")
+    const cardWeatherBtn = $("<button>")
+      .attr("type", "button")
       .addClass("btn btn-success")
+      .attr("data-bs-toggle", "modal")
+      .attr("data-bs-target", "#weatherModal")
       .text("Forecast");
 
     //Image will be populated from ping to park API
@@ -252,7 +112,7 @@ function createParkCard(parkInfo) {
     let longitude = parkInfo[i].longitude;
 
     //Event listener for weather button press to call getWeather function and pass latitude and longitude
-    cardWeatherBtn.on("click", getWeather(latitude, longitude));
+    // cardWeatherBtn.on("click", getWeather(latitude, longitude));
 
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
@@ -274,30 +134,6 @@ function renderParks() {
   }
 }
 
-function renderModal() {
-  //Create modal pop-up to house weather card group
-  const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
-  const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
-  const modalContent = $("<div>").addClass("modal-content");
-  const modalHeader = $("<div>").addClass("modal-header");
-  const modalTitle = $("<h4>")
-    .addClass("modal-title text-center")
-    .text("5-Day Forecast");
-  const modalClose = $("<button>")
-    .addClass("btn-close")
-    .attr("data-bs-dismiss", "modal")
-    .attr("aria-label", "Close");
-  const modalBody = $("<div>").addClass("modal-body");
-
-  //Append modal to HTML
-  weatherModal.appendTo($(".card-grid"));
-  weatherModal.append(modalDialog);
-  modalDialog.append(modalContent);
-  modalContent.append(modalHeader, modalBody);
-  modalHeader.append(modalTitle, modalClose);
-  // modalBody.append(forecastGroup);
-}
-
 function weatherModal(weatherInfo) {
   //Create card group for 5-day forecast
   const forecastGroup = $("<div>").addClass("card-group");
@@ -308,6 +144,8 @@ function weatherModal(weatherInfo) {
   const forecastTemp = $("<p>").addClass("card-text");
   const forecastWind = $("<p>").addClass("card-text");
   const forecastHumid = $("<p>").addClass("card-text");
+
+  //Pull current date from dayJS to plug in for forecast
 
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
 
@@ -321,7 +159,6 @@ function weatherModal(weatherInfo) {
 //Create initialization function when page fully loads
 $(document).ready(function () {
   renderParks();
-  renderModal();
 
   $(".selectButton").on("click", getParks);
 });
