@@ -223,7 +223,8 @@ function createParkCard(parkInfo) {
 
     //Image will be populated from ping to park API
     let parkImage = parkInfo[i].images[0].url;
-    cardImage.attr("src", `${parkImage}`);
+    let imageAlt = parkInfo[i].images[0].altText;
+    cardImage.attr("src", `${parkImage}`).attr("alt", `${imageAlt}`);
 
     //Update the title with the name of the park pulled from the API
     let parkName = parkInfo[i].fullName;
@@ -231,7 +232,8 @@ function createParkCard(parkInfo) {
 
     //Update the text with a short description of the park that cuts off if it's too long
     let description = parkInfo[i].description;
-    let maxLength = 100;
+
+    let maxLength = 200;
 
     if (description.length > maxLength) {
       description = description.substring(0, maxLength) + "...";
@@ -244,13 +246,13 @@ function createParkCard(parkInfo) {
     cardWeatherBtn.on("click");
 
     //Park info button
-    let parkSite = parkInfo.url;
+    let parkSite = parkInfo[i].url;
 
     cardLinkBtn.attr("href", `${parkSite}`);
 
     //Weather button
-    let latitude = parkInfo.latitude;
-    let longitude = parkInfo.longitude;
+    let latitude = parkInfo[i].latitude;
+    let longitude = parkInfo[i].longitude;
     //Call weatherModal function and pass latitude and longitude values into function for forecast ping
     // weatherModal(latitude, longitude);
 

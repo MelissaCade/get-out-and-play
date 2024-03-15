@@ -9,8 +9,9 @@
   --green-xlt: rgb(250, 253, 248);
 }
 html {
-  font-size: 62.5%;
+  font-size: 100%;
 }
+
 .angkor-regular {
   font-family: "Angkor", serif;
   font-weight: 400;
@@ -69,7 +70,7 @@ section {
   color: var(--green-dk);
 }
 .ui-widget {
-  font-size: 2rem;
+  font-size: 1rem;
 }
 .ui-widget label {
   line-height: 2;
@@ -99,7 +100,7 @@ section {
   overflow-x: hidden;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   header {
     background-image: url("../images/background-mobile.jpg");
   }
