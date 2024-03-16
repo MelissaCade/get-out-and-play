@@ -9,6 +9,7 @@
 //"images.url" will give a lovely .jpg of the park
 
 let parkList = JSON.parse(localStorage.getItem("parkData"));
+<<<<<<< HEAD
 let weatherModal;
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
@@ -152,6 +153,8 @@ $(function () {
     $("#combobox").toggle();
   });
 });
+=======
+>>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
 
 //Function to get data for national parks
 function getParks() {
@@ -220,8 +223,11 @@ function createParkCard(parkInfo) {
     const cardTitle = $("<h3>").addClass("card-title");
     const cardText = $("<p>").addClass("card-text");
     const cardLinkBtn = $("<a>").addClass("btn btn-success").text("Learn More");
-    const cardWeatherBtn = $("<a>")
+    const cardWeatherBtn = $("<button>")
+      .attr("type", "button")
       .addClass("btn btn-success")
+      .attr("data-bs-toggle", "modal")
+      .attr("data-bs-target", "#weatherModal")
       .text("Forecast");
 
     //Image will be populated from ping to park API
@@ -253,10 +259,15 @@ function createParkCard(parkInfo) {
     let longitude = parkInfo[i].longitude;
 
     //Event listener for weather button press to call getWeather function and pass latitude and longitude
+<<<<<<< HEAD
     cardWeatherBtn.on("click", function () {
       
       getWeather(latitude, longitude);
     })
+=======
+    // cardWeatherBtn.on("click", getWeather(latitude, longitude));
+
+>>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
@@ -277,6 +288,7 @@ function renderParks() {
   }
 }
 
+<<<<<<< HEAD
 function renderModal() {
   //Create modal pop-up to house weather card group
   weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
@@ -301,6 +313,8 @@ function renderModal() {
   // modalBody.append(forecastGroup);
 }
 
+=======
+>>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
 function weatherModal(weatherInfo) {
   console.log (weatherInfo);
   //Create card group for 5-day forecast
@@ -312,6 +326,8 @@ function weatherModal(weatherInfo) {
   const forecastTemp = $("<p>").addClass("card-text");
   const forecastWind = $("<p>").addClass("card-text");
   const forecastHumid = $("<p>").addClass("card-text");
+
+  //Pull current date from dayJS to plug in for forecast
 
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
 
@@ -325,7 +341,6 @@ function weatherModal(weatherInfo) {
 //Create initialization function when page fully loads
 $(document).ready(function () {
   renderParks();
-  renderModal();
 
   $(".selectButton").on("click", getParks);
 });
