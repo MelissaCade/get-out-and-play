@@ -9,7 +9,7 @@
 //"images.url" will give a lovely .jpg of the park
 
 let parkList = JSON.parse(localStorage.getItem("parkData"));
-
+let weatherModal;
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
   $.widget("custom.combobox", {
@@ -176,6 +176,7 @@ function getParks() {
       let parkInfo = JSON.parse(parkInfoString);
       const parkInformation = parkInfo.data;
       createParkCard(parkInformation);
+    console.log (parkInfo);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -201,7 +202,7 @@ function getWeather(latitude, longitude) {
       let weatherInfoString = localStorage.getItem("weatherData");
       let weatherInfo = JSON.parse(weatherInfoString);
       let weatherInformation = weatherInfo.list;
-      // weatherModal(weatherInformation);
+      weatherModal(weatherInformation);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -252,8 +253,10 @@ function createParkCard(parkInfo) {
     let longitude = parkInfo[i].longitude;
 
     //Event listener for weather button press to call getWeather function and pass latitude and longitude
-    cardWeatherBtn.on("click", getWeather(latitude, longitude));
-
+    cardWeatherBtn.on("click", function () {
+      
+      getWeather(latitude, longitude);
+    })
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
@@ -276,7 +279,7 @@ function renderParks() {
 
 function renderModal() {
   //Create modal pop-up to house weather card group
-  const weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
+  weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
   const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered");
   const modalContent = $("<div>").addClass("modal-content");
   const modalHeader = $("<div>").addClass("modal-header");
@@ -299,6 +302,7 @@ function renderModal() {
 }
 
 function weatherModal(weatherInfo) {
+  console.log (weatherInfo);
   //Create card group for 5-day forecast
   const forecastGroup = $("<div>").addClass("card-group");
   const forecastCard = $("<div>").addClass("card");
