@@ -9,7 +9,6 @@
 //"images.url" will give a lovely .jpg of the park
 
 let parkList = JSON.parse(localStorage.getItem("parkData"));
-<<<<<<< HEAD
 let weatherModal;
 //Code from jQueryUI to create a combobox to search through a dropdown menu
 $(function () {
@@ -153,8 +152,6 @@ $(function () {
     $("#combobox").toggle();
   });
 });
-=======
->>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
 
 //Function to get data for national parks
 function getParks() {
@@ -259,15 +256,10 @@ function createParkCard(parkInfo) {
     let longitude = parkInfo[i].longitude;
 
     //Event listener for weather button press to call getWeather function and pass latitude and longitude
-<<<<<<< HEAD
     cardWeatherBtn.on("click", function () {
       
       getWeather(latitude, longitude);
     })
-=======
-    // cardWeatherBtn.on("click", getWeather(latitude, longitude));
-
->>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
@@ -288,7 +280,6 @@ function renderParks() {
   }
 }
 
-<<<<<<< HEAD
 function renderModal() {
   //Create modal pop-up to house weather card group
   weatherModal = $("<div>").addClass("modal").attr("tabindex", "-1");
@@ -313,8 +304,6 @@ function renderModal() {
   // modalBody.append(forecastGroup);
 }
 
-=======
->>>>>>> 21349ea74df604e59ee90afa73e18a742445d5da
 function weatherModal(weatherInfo) {
   console.log (weatherInfo);
   //Create card group for 5-day forecast
