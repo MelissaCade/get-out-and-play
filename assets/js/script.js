@@ -173,14 +173,14 @@ function weatherModal(weatherInfo) {
   const forecastIcon = $("<img>").addClass("card-img-top");
   forecastIcon.attr("src", `https://openweathermap.org/img/w/${weatherInfo[i].weather[0].icon}.png`)
   const forecastBody = $("<div>").addClass("card-body");
-  const forecastDate = $("<h5>").addClass("card-title");
+  const forecastDate = $("<h6>").addClass("card-title");
   forecastDate.text(dayjs.unix(weatherInfo[i].dt).format("MM/DD/YY"))
   const forecastTemp = $("<p>").addClass("card-text");
   forecastTemp.text(`Temp: ${Math.round(weatherInfo[i].main.temp)} F`)
   const forecastWind = $("<p>").addClass("card-text");
   forecastWind.text(`Wind: ${Math.round(weatherInfo[i].wind.speed)} MPH`)
   const forecastHumid = $("<p>").addClass("card-text");
-  forecastHumid.text(`Humidity: ${Math.round(weatherInfo[i].main.humidty)} %`)
+  forecastHumid.text(`Humidity: ${Math.round(weatherInfo[i].main.humidity)} %`)
   forecastBody.append(forecastDate, forecastIcon, forecastTemp, forecastWind, forecastHumid)
   forecastCard.append(forecastIcon, forecastBody)
   forecastGroup.append(forecastCard)
