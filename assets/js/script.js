@@ -170,14 +170,14 @@ function weatherModal(weatherInfo) {
   const forecastGroup = $("<div>").addClass("card-group");
 
   //for loop to populate the card group with five day forecast
-  for (let i = 3; i < weatherInfo.length; i += 8) {
+  for (let i = 0; i < weatherInfo.length; i += 8) {
     //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
     const forecastCard = $("<div>").addClass("card");
     const forecastIcon = $("<img>").addClass("card-img-top");
     //Assign image based on weather conditions pulled from API
     forecastIcon.attr(
       "src",
-      `https://openweathermap.org/img/w/${weatherInfo[i].weather[0].icon}.png`
+      `./assets/images/icons/${weatherInfo[i].weather[0].icon}.png`
     );
     const forecastBody = $("<div>").addClass("card-body");
     const forecastDate = $("<h6>").addClass("card-title");
