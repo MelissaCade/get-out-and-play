@@ -170,7 +170,7 @@ function weatherModal(weatherInfo) {
   const forecastGroup = $("<div>").addClass("card-group");
 
   //for loop to populate the card group with five day forecast
-  for (let i = 3; i < weatherInfo.length; i += 8) {
+  for (let i = 0; i < weatherInfo.length; i += 8) {
     //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
     const forecastCard = $("<div>").addClass("card");
     const forecastIcon = $("<img>").addClass("card-img-top");
