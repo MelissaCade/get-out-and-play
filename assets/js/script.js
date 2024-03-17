@@ -177,7 +177,7 @@ function weatherModal(weatherInfo) {
     //Assign image based on weather conditions pulled from API
     forecastIcon.attr(
       "src",
-      `https://openweathermap.org/img/w/${weatherInfo[i].weather[0].icon}.png`
+      `./assets/images/icons/${weatherInfo[i].weather[0].icon}.png`
     );
     const forecastBody = $("<div>").addClass("card-body");
     const forecastDate = $("<h6>").addClass("card-title");
