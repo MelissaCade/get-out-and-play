@@ -58,7 +58,8 @@ function getWeather(latitude, longitude) {
       let weatherInfoString = localStorage.getItem("weatherData");
       let weatherInfo = JSON.parse(weatherInfoString);
       let weatherInformation = weatherInfo.list;
-      // weatherModal(weatherInformation);
+      console.log (weatherInformation);
+            weatherModal(weatherInformation);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -112,8 +113,11 @@ function createParkCard(parkInfo) {
     let longitude = parkInfo[i].longitude;
 
     //Event listener for weather button press to call getWeather function and pass latitude and longitude
-    // cardWeatherBtn.on("click", getWeather(latitude, longitude));
-
+    cardWeatherBtn.on("click", function() {
+    
+      
+      getWeather(latitude, longitude);
+    } )
     //Append the cards to the body
     cardBody.append(cardTitle, cardText, cardLinkBtn, cardWeatherBtn);
     parkCard.append(cardImage, cardBody);
@@ -134,17 +138,58 @@ function renderParks() {
   }
 }
 
+
+function renderModal() {
+  //Create modal pop-up to house weather card group
+  const weatherModal = $("<div>").addClass("modal fade").attr("tabindex", "-1");
+  weatherModal.attr("id","weatherModal")
+  const modalDialog = $("<div>").addClass("modal-dialog modal-dialog-centered modal-lg");
+  const modalContent = $("<div>").addClass("modal-content");
+  const modalHeader = $("<div>").addClass("modal-header");
+  const modalTitle = $("<h4>")
+    .addClass("modal-title text-center")
+    .text("5-Day Forecast");
+  const modalClose = $("<button>")
+    .addClass("btn-close")
+    .attr("data-bs-dismiss", "modal")
+    .attr("aria-label", "Close");
+  const modalBody = $("<div>").addClass("modal-body");
+
+  //Append modal to HTML
+  weatherModal.appendTo($(".card-grid"));
+  weatherModal.append(modalDialog);
+  modalDialog.append(modalContent);
+  modalContent.append(modalHeader, modalBody);
+  modalHeader.append(modalTitle, modalClose);
+  // modalBody.append(forecastGroup);
+}
+
 function weatherModal(weatherInfo) {
+  console.log(weatherInfo);
   //Create card group for 5-day forecast
   const forecastGroup = $("<div>").addClass("card-group");
+  for (let i=3; i<weatherInfo.length; i+=8) {
   const forecastCard = $("<div>").addClass("card");
   const forecastIcon = $("<img>").addClass("card-img-top");
+  forecastIcon.attr("src", `https://openweathermap.org/img/w/${weatherInfo[i].weather[0].icon}.png`)
   const forecastBody = $("<div>").addClass("card-body");
   const forecastDate = $("<h5>").addClass("card-title");
+  forecastDate.text(dayjs.unix(weatherInfo[i].dt).format("MM/DD/YY"))
   const forecastTemp = $("<p>").addClass("card-text");
+  forecastTemp.text(`Temp: ${Math.round(weatherInfo[i].main.temp)} F`)
   const forecastWind = $("<p>").addClass("card-text");
+  forecastWind.text(`Wind: ${Math.round(weatherInfo[i].wind.speed)} MPH`)
   const forecastHumid = $("<p>").addClass("card-text");
+  forecastHumid.text(`Humidity: ${Math.round(weatherInfo[i].main.humidty)} %`)
+  forecastBody.append(forecastDate, forecastIcon, forecastTemp, forecastWind, forecastHumid)
+  forecastCard.append(forecastIcon, forecastBody)
+  forecastGroup.append(forecastCard)
 
+
+
+  }
+
+  $(".modal-body").append(forecastGroup)
   //Pull current date from dayJS to plug in for forecast
 
   //Pull weather information from API (date, temperature, windspeed, humidity) and populate body of card with info
@@ -159,6 +204,9 @@ function weatherModal(weatherInfo) {
 //Create initialization function when page fully loads
 $(document).ready(function () {
   renderParks();
+
+renderModal()
+
 
   $(".selectButton").on("click", getParks);
 });
