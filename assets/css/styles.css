@@ -45,6 +45,10 @@ section {
   height: auto;
   max-width: 100%;
 }
+.card-img-top {
+  width: 70%;
+  margin: 15%;
+}
 .ui-widget {
   font-size: 1rem;
 }
