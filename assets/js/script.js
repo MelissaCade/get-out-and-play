@@ -13,10 +13,10 @@ let parkList = JSON.parse(localStorage.getItem("parkData"));
 //Function to get data for national parks
 function getParks() {
   let state = $("#combobox").val();
-
+  
   fetch(
     `https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`
-  )
+    )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response unsuccessful");
@@ -27,7 +27,7 @@ function getParks() {
       let parkInfoRaw = JSON.stringify(data);
       localStorage.setItem("parkData", parkInfoRaw);
 
-      $(".parkResults").remove();
+      $('.parkResults').remove();
 
       let parkInfoString = localStorage.getItem("parkData");
       let parkInfo = JSON.parse(parkInfoString);
@@ -67,6 +67,7 @@ function getWeather(latitude, longitude) {
 
 //Creates cards with park info and buttons
 function createParkCard(parkInfo) {
+
   //Iterate through park info in array to create cards
   for (i = 0; i < parkInfo.length; i++) {
     const parkCell = $("<div>").addClass("col parkResults");
@@ -86,8 +87,7 @@ function createParkCard(parkInfo) {
 
     //Image will be populated from ping to park API
     let parkImage = parkInfo[i].images[0].url;
-    let imageAlt = parkInfo[i].images[0].altText;
-    cardImage.attr("src", `${parkImage}`).attr("alt", `${imageAlt}`);
+    cardImage.attr("src", `${parkImage}`);
 
     //Update the title with the name of the park pulled from the API
     let parkName = parkInfo[i].fullName;
@@ -95,7 +95,7 @@ function createParkCard(parkInfo) {
 
     //Update the text with a short description of the park that cuts off if it's too long
     let description = parkInfo[i].description;
-    let maxLength = 200;
+    let maxLength = 40;
 
     if (description.length > maxLength) {
       description = description.substring(0, maxLength) + "...";
@@ -104,7 +104,7 @@ function createParkCard(parkInfo) {
     cardText.text(description);
 
     //Park info button
-    let parkSite = parkInfo[i].url;
+    let parkSite = parkInfo.url;
 
     cardLinkBtn.attr("href", `${parkSite}`);
 
