@@ -6,7 +6,7 @@ In this projet we were split into teams to come up with a project idea of our ch
 
 ## Installation
 
-To install the page, go the the following website: (deployed link)
+To install the page, go the the following website: (https://melissacade.github.io/get-out-and-play/)
 Here is the GitHub page to access the project: https://github.com/MelissaCade/get-out-and-play
 
 ## Usage
