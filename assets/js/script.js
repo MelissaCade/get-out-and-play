@@ -13,10 +13,10 @@ let parkList = JSON.parse(localStorage.getItem("parkData"));
 //Function to get data for national parks
 function getParks() {
   let state = $("#combobox").val();
-  
+
   fetch(
     `https://developer.nps.gov/api/v1/parks?stateCode=${state}&api_key=CIOhNHwWVZAX8YbB1U7TJWA0Q8aazIZthMXdZLmY`
-    )
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response unsuccessful");
@@ -27,7 +27,7 @@ function getParks() {
       let parkInfoRaw = JSON.stringify(data);
       localStorage.setItem("parkData", parkInfoRaw);
 
-      $('.parkResults').remove();
+      $(".parkResults").remove();
 
       let parkInfoString = localStorage.getItem("parkData");
       let parkInfo = JSON.parse(parkInfoString);
@@ -67,7 +67,6 @@ function getWeather(latitude, longitude) {
 
 //Creates cards with park info and buttons
 function createParkCard(parkInfo) {
-
   //Iterate through park info in array to create cards
   for (i = 0; i < parkInfo.length; i++) {
     const parkCell = $("<div>").addClass("col parkResults");
@@ -104,7 +103,7 @@ function createParkCard(parkInfo) {
     cardText.text(description);
 
     //Park info button
-    let parkSite = parkInfo.url;
+    let parkSite = parkInfo[i].url;
 
     cardLinkBtn.attr("href", `${parkSite}`);
 
