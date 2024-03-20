@@ -94,7 +94,7 @@ function createParkCard(parkInfo) {
 
     //Update the text with a short description of the park that cuts off if it's too long
     let description = parkInfo[i].description;
-    let maxLength = 40;
+    let maxLength = 200;
 
     if (description.length > maxLength) {
       description = description.substring(0, maxLength) + "...";
